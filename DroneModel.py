@@ -98,7 +98,7 @@ def get_T_and_theta_goal(Tx, Ty, robot_weight, Fmax):
 
 def get_F1_and_F2(Tx, Ty, m, theta, w, l, r, Fmax):
     Kw = 3
-    Ka = 1
+    Ka = 1.1
     T, theta_goal = get_T_and_theta_goal(Tx, Ty, m, Fmax)
     w_goal = Kw*ang_diff(theta_goal, theta)
     a = Ka*(w_goal - w)
