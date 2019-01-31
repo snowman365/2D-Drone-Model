@@ -1,2 +1,6 @@
-Implements a 2D drone that can move to waypoints either set by the user or
-entered programatically
+	- 	Implements a 2D drone that can move to waypoints either set by the user or
+		entered programatically
+	-	Set AutoMode to True for waypoints to be cycled automatically, False to have
+		the drone move to a clicked point
+	-	Turn wind on and off by setting the wind_on variable
+	-	

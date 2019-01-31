@@ -191,8 +191,8 @@ def change_wind(wind, amount):
 
 
 if __name__ == "__main__":
-    auto_mode = True   # switches between automatically updating the goal and relying on user input
-    wind_on = True
+    auto_mode = False   # switches between automatically updating the goal and relying on user input
+    wind_on = False
     v_wind = 5 # m/s
 
     # control constants, good values Kty = 0.3, Ktx = 0.1, Kiy = 0.01, Kw = 3, Ka = to_radians(45)/10
@@ -244,21 +244,11 @@ if __name__ == "__main__":
         terminal_velocity_y_up = 1000 # infinity
         terminal_velocity_y_down = 1000 # infinity
 
-    '''
-    print("tx: ", terminal_velocity_x)
-    print("tyu: ", terminal_velocity_y_up)
-    print("tyd: ", terminal_velocity_y_down)
-    '''
-
     if auto_mode:
         robert.goal = goals[0]
+
     while True:
 
-        '''
-        print("tx: ", terminal_velocity_x)
-        print("tyu: ", terminal_velocity_y_up)
-        print("tyd: ", terminal_velocity_y_down)
-        '''
         xEsum += (vx_goal - vx)
         yEsum += (vy_goal - vy)
 
@@ -267,7 +257,6 @@ if __name__ == "__main__":
         Tx = Ktx*(vx_goal - vx) + Kix*xEsum
 
         # get the ideal force and angle to get the desired x and y components of force (right now T updates instantaneously, theta doesn't)
-        # T, theta_goal = get_T_and_theta_goal(Tx, Ty, robert.drone_weight) # old way
         F1, F2 = get_F1_and_F2(Tx, Ty, robert.drone_weight, theta, omega, robert.drone_length, robert.center_to_prop, robert.motor_max_power)
         F1 = clamp(F1, 0, robert.motor_max_power)
         F2 = clamp(F2, 0, robert.motor_max_power)
