@@ -1,1 +1,2 @@
-My Project
+Implements a 2D drone that can move to waypoints either set by the user or
+entered programatically
