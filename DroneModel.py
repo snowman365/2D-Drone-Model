@@ -90,8 +90,6 @@ def get_T_and_theta_goal(Tx, Ty, robot_weight, Fmax):
     thetag = atan2(Tx, Ty)
     T = sqrt(Tx*Tx + Ty*Ty)
     T = clamp(T, 0, Tmax)
-    if Tmax <= T:
-        print("max")
     return T, -thetag
 
 # given desired x and y force components, drone orientation, angular velocity,
@@ -310,33 +308,37 @@ if __name__ == "__main__":
         vy_goal = (robert.goal[1] - xy) * Kv
 
         # don't try to go faster than terminal velocity
-        speed_factor = 0.7
         vx_goal = clamp(vx_goal, -terminal_velocity_x, terminal_velocity_x)
         vy_goal = clamp(vy_goal, -terminal_velocity_y_down, terminal_velocity_y_up)
 
         # also want to make sure it can never go faster than it could slow down in the distance before the goal
+        # (actually don't want to exceed 70% of that speed)
+        speed_factor = 0.7
         vx_goal_max, vy_goal_max = get_goal_max(vx, vy, xx-robert.goal[0], xy-robert.goal[1], robert.motor_max_power*2, robert.drone_weight, ag)
         vx_goal = clamp(vx_goal, -vx_goal_max*speed_factor, vx_goal_max*speed_factor)
         vy_goal = clamp(vy_goal, -vy_goal_max*speed_factor, vy_goal_max*speed_factor)
 
-        
+        # stop as quickly as possible if we are going faster than we can slow down
         if fabs(vx_goal_max) < fabs(vx):
             vx_goal = 0
+            '''
             print("---------------------------------------")
             print("x overshoot")
             print("dx: ", xx-robert.goal[0])
             print("vxmax: ", vx_goal_max)
             print("vx_goal: ", vx_goal)
             print("vx: ", vx)
+            '''
         if fabs(vy_goal_max) < fabs(vy):
             vy_goal = 0
+            '''
             print("---------------------------------------")
             print("y overshoot")
             print("dy: ", xy-robert.goal[1])
             print("vy_goal_max: ", vy_goal_max)
             print("vy_goal: ", vy_goal)
             print("vy: ", vy)
-
+            '''
 
         # get thrust and angular acceleration from motor forces
         alpha = (12*robert.center_to_prop*(-F2 + F1))/(robert.drone_weight*robert.drone_length**2)
